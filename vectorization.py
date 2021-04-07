@@ -61,10 +61,15 @@ def vect_last_new_job(data: str):
     # else:
     #     return 6
 
+def rem(x):
+    c =14- x.count()
+    return c
 
 def vectorise_data(df_train, df_test, df_answer, isNull):
     # df_train = df_train.drop(df_train[(df_train.isnull().sum(axis=1) >2)].index)
-
+    df_train['empty_count'] = df_train.apply(lambda x: rem(x) ,axis=1)
+    print(f"count of null {df_train['empty_count'].sum(axis=0)}")
+    df_train = df_train.drop(['empty_count'],axis=1)
 
     df_train['city'] = df_train['city'].str[5:].values.astype('int')
     df_train['gender'] = df_train.apply(lambda row: vect_gender(row['gender']), axis=1)

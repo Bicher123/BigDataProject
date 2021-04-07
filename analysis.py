@@ -15,6 +15,7 @@ from sklearn.ensemble import RandomForestClassifier
 from decision_tree import decisionTreeClassification
 from random_forest import randomForestClassification
 
+
 from sklearn.metrics import plot_confusion_matrix
 from sklearn import metrics 
 from vectorization import vectorise_data
@@ -54,10 +55,8 @@ def calculate_correlations(df_train):
     corrMatrix = df_train.corr()
     sn.heatmap(corrMatrix, annot=True)
     plt.show()
-    columns = list(df_train.columns)
-    correlations = []
-    
-    return correlations
+
+    return []
 
 def calculate_entropy(df_train):
     entropies = []
@@ -101,7 +100,7 @@ df_train = df_train.drop(['enrollee_id', 'city','last_new_job', 'company_size', 
 df_test = df_test.drop(['enrollee_id', 'city','last_new_job', 'company_size','enrolled_university'], axis=1)
 
 df_train, df_target = balanceDataSet(df_train, df_target)
-plot_target_distribution(df_train)
+# plot_target_distribution(df_train)
 calculate_correlations(df_train)
 # decision tree classification
 decisionTreeClassification(df_train,df_target, df_answer, df_test)
