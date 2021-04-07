@@ -153,11 +153,7 @@ def calculate_correlations(df_train):
     columns = list(df_train.columns)
     correlations = []
     
-    # for index, col in enumerate(columns):
-    #     if index < len(columns)-2: 
-    #         for other_col in columns[index+1:]:
-    #             correlations.append((col, other_col, df_train[col].corr(df_train[other_col])))
-    # print(correlations)
+
     return correlations
 def calculate_entropy(df_train):
     entropies = []
@@ -185,7 +181,7 @@ def calculate_entropy(df_train):
 
 
 a,b,c=read_files()
-# // false is no null in columns
+
 print("Any missing sample in training set:",a.isnull().values.any())
 df_train, df_test, df_answer = vectorise_data(a,b,c , False)
 print("Any missing sample in training set after preparaton:",df_train.isnull().values.any())
@@ -207,8 +203,7 @@ print('Before',counter)
 sm = SMOTE(sampling_strategy = .9)
 
 df_train, df_target = sm.fit_resample(df_train, df_target)
-# ncr= NeighbourhoodCleaningRule()
-# df_train, df_target = ncr.fit_resample(df_train, df_target)
+
 counter = Counter(df_target)
 print('After',counter)
                
@@ -216,10 +211,10 @@ tree = DecisionTreeClassifier()
 noDt = tree.fit(df_train,df_target)
 nopred = noDt.predict(df_test)
 print(metrics.classification_report(df_answer, nopred))
-# Instantiate the RandomizedSearchCV object: tree_cv
+
 tree_cv = RandomizedSearchCV(tree, param_dist, cv=50)
 
-# Fit it to the data
+
 tree_cv.fit(df_train,df_target)
 prediction = tree_cv.predict(df_test)
 print(tree_cv.best_params_)
@@ -243,56 +238,3 @@ print(rf_cv.best_params_)
 print(metrics.classification_report(df_answer, prediction_rf))
 disp = plot_confusion_matrix(rf_cv, df_test, df_answer,display_labels=['0','1'],cmap=plt.cm.Blues,normalize=None)
 plt.show()
-# from imblearn.under_sampling import RandomUnderSampler
-# from imblearn.pipeline import Pipeline
-# 
-
-
-# pipeline = Pipeline(steps = [('smote', sm),('under',rus)])
-
-
-# #over and undersampling the train dataset using SMOTE + RandomUnderSampler
-# X_train_smrus, y_train_smrus = pipeline.fit_resample(X_train, y_train)
-
-# counter = Counter(y_train_smrus)
-# print('After',counter)
-
-    # # Instantiate a Decision Tree classifier: tree
-    # tree = DecisionTreeClassifier()
-
-    # # Instantiate the RandomizedSearchCV object: tree_cv
-    # tree_cv = RandomizedSearchCV(tree, param_dist, cv=5)
-
-    # # Fit it to the data
-    # tree_cv.fit(X,y)
-
-    # # Print the tuned parameters and score
-    # print("Tuned Decision Tree Parameters: {}".format(tree_cv.best_params_))
-    # print("Best score is {}".format(tree_cv.best_score_))
-
-    # test_set["result"] = df_answers
-
-    # results = df_answers[0]
-    # print(results.head())
-    # print(train_set.shape)
-    # print(train_set.head())
-
-    #drops the target column. axis is 1 to drop the column
-    # X_train = train_set.drop(['target', 'city'], axis=1)
-    # y_train = train_set['target']
-
-    # X_test = test_set.drop('city', axis=1)
-    # y_test = df_answers
-
-    # classifier = DecisionTreeClassifier()
-    # classifier.fit(X_train, y_train)
-
-    # y_pred = classifier.predict(X_test)
-
-    # print(confusion_matrix(y_test, y_pred))
-    # print(classification_report(y_test, y_pred))
-    
-
-#     from imblearn.over_sampling import SMOTE
-# from collections import Counter
-
