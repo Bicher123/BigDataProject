@@ -8,7 +8,7 @@ import pandas as pd
 
 
 
-def decisionTreeClassification(df_train,df_target, df_answer, df_test):
+def decisionTreeClassification(df_train,df_target, df_answer, df_test, validation, validation_answer):
     print("=====================================================================")
     print("Decision Tree classification:")
 
@@ -18,11 +18,15 @@ def decisionTreeClassification(df_train,df_target, df_answer, df_test):
     nohyp = tree.fit(df_train,df_target)
     # predict test
     noHypPred = nohyp.predict(df_test)
-    # predict train
+    # predict validation
+    no_hyp_pred_val = nohyp.predict(validation)
+    # predict validation
     no_hyp_pred_train = nohyp.predict(df_train)
 
     print("train base ")
     print(classification_report(df_target, no_hyp_pred_train))
+    print("validation base ")
+    print(classification_report(validation_answer, no_hyp_pred_val))
     print("test base")
     print(classification_report(df_answer, noHypPred))
     disp = plot_confusion_matrix(nohyp, df_test, df_answer,display_labels=['0','1'],cmap=plt.cm.Blues,normalize=None)
@@ -43,12 +47,16 @@ def decisionTreeClassification(df_train,df_target, df_answer, df_test):
     print(rand_tree.best_params_)
     # predict test
     prediction = rand_tree.predict(df_test)
+    # predict validation
+    pred_val = rand_tree.predict(validation)
     # predict train
     pred_train = rand_tree.predict(df_train)
    
-    print("train")
+    print("train hyper")
     print(classification_report(df_target, pred_train))
-    print("test")
+    print("validation hyper")
+    print(classification_report(validation_answer, pred_val))
+    print("test hyper")
     print(classification_report(df_answer, prediction))
     disp = plot_confusion_matrix(rand_tree, df_test, df_answer,display_labels=['0','1'],cmap=plt.cm.Blues,normalize=None)
     plt.show()

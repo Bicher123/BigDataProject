@@ -5,6 +5,7 @@ from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.model_selection import train_test_split
 from imblearn.under_sampling import NeighbourhoodCleaningRule
 import numpy as np
 import pandas as pd
@@ -38,7 +39,7 @@ def plot_target_distribution(df_train):
     
     x_axis = np.array(x)
     y_axis = np.array(y)
-    # plt.bar(x_axis, y_axis)
+    
     plt.xticks(rotation=90)
     bar=plt.bar(left, y_axis, tick_label = x_axis, 
             width = 0.8, color = ['blue', 'green']) 
@@ -84,11 +85,12 @@ def calculate_entropy(df_train):
 
 
 #  read csv file 
-a,b,c=read_files()
+train_set,test,answer=read_files()
 
-print("Any missing sample in training set:",a.isnull().values.any())
-df_train, df_test, df_answer = vectorise_data(a,b,c , False)
+print("Any missing sample in training set:",train_set.isnull().values.any())
+df_train, df_test, df_answer = vectorise_data(train_set,test,answer , False)
 print("Any missing sample in training set after preparaton:",df_train.isnull().values.any())
+
 
 plot_target_distribution(df_train)
 calculate_correlations(df_train)
@@ -96,12 +98,17 @@ calculate_entropy(df_train)
 
 # drop columns after anlysing the correlation matrice and the entropy chart
 df_target = df_train['target']
-df_train = df_train.drop(['enrollee_id', 'city','last_new_job', 'company_size', 'target', 'enrolled_university'], axis=1)
-df_test = df_test.drop(['enrollee_id', 'city','last_new_job', 'company_size','enrolled_university'], axis=1)
+df_train = df_train.drop(['enrollee_id', 'city','last_new_job', 'target', 'enrolled_university'], axis=1)
+df_test = df_test.drop(['enrollee_id', 'city','last_new_job','enrolled_university'], axis=1)
 
 df_train, df_target = balanceDataSet(df_train, df_target)
-# plot_target_distribution(df_train)
-calculate_correlations(df_train)
+df_train['target'] = df_target
+df_train, validation = train_test_split(df_train, test_size=0.1)
+df_target = df_train['target']
+df_train = df_train.drop(['target'], axis=1)
+validation_answer = validation['target']
+validation = validation.drop(['target'], axis=1)
+
 # decision tree classification
-decisionTreeClassification(df_train,df_target, df_answer, df_test)
-randomForestClassification(df_train,df_target, df_answer, df_test)
+decisionTreeClassification(df_train,df_target, df_answer, df_test, validation, validation_answer)
+randomForestClassification(df_train,df_target, df_answer, df_test, validation, validation_answer)

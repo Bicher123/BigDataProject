@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-def randomForestClassification(df_train,df_target, df_answer, df_test):
+def randomForestClassification(df_train,df_target, df_answer, df_test, validation, validation_answer):
     print("=====================================================================")
     print("Random Forest classification:")
     # random forest classification without hyperparameters
@@ -16,11 +16,14 @@ def randomForestClassification(df_train,df_target, df_answer, df_test):
     no_hp_rf = rf.fit(df_train,df_target)
     # predict test
     no_hp_rf_pred = no_hp_rf.predict(df_test)
+    # predict validation
+    no_hyp_pred_val = no_hp_rf.predict(validation)
     # predict train
     no_hyp_pred_train = no_hp_rf.predict(df_train)
-
     print("train base")
     print(classification_report(df_target, no_hyp_pred_train))
+    print("validation base")
+    print(classification_report(validation_answer, no_hyp_pred_val))
     print("test base")
     print(classification_report(df_answer, no_hp_rf_pred))
     disp = plot_confusion_matrix(no_hp_rf, df_test, df_answer,display_labels=['0','1'],cmap=plt.cm.Blues,normalize=None)
@@ -37,16 +40,21 @@ def randomForestClassification(df_train,df_target, df_answer, df_test):
     # random forest classification with hyperparameters               
     rf_cv = RandomizedSearchCV(rf, params, cv=10)
    
-    #  training
+    #  validation
     hp_rf = rf_cv.fit(df_train,df_target) 
+    
     print(rf_cv.best_params_)
     # predict test
     prediction_rf = hp_rf.predict(df_test)
+    # predict validation
+    pred_val = hp_rf.predict(validation)
     # predict train
     pred_train = hp_rf.predict(df_train)
 
     print("train")
     print(classification_report(df_target, pred_train))
+    print("validation")
+    print(classification_report(validation_answer, pred_val))
     print("test")
     print(classification_report(df_answer, prediction_rf))
     disp = plot_confusion_matrix(rf_cv, df_test, df_answer,display_labels=['0','1'],cmap=plt.cm.Blues,normalize=None)
