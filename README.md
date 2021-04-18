@@ -29,7 +29,7 @@ Since a lot of people register for these courses, the company wants to find out 
 ### Presentation of the Problem to Solve
 Analyzing this dataset will be performed using supervised binary classification. One problem that we face with the data is that it is an imbalanced dataset. Since it is imbalanced the classifier might return a biased result towards the majority class.
 
-### Related Work.
+### Related Work
 Many notebooks have been posted concerning this dataset such as [Predict who will move to a new job](https://www.kaggle.com/khotijahs1/predict-who-will-move-to-a-new-job/notebook) by Siti Khotijah. In her analysis, she compares the different features that can influence a candidate's decision to move to a new job. She was able to find which features are noticeably affecting the classification of the candidates. By separating candidates according to their education level and comparing them using other sub-features, she was able to determine the classification of the candidates.
 
 ## II. Materials and Methods 
