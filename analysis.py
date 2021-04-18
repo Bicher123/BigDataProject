@@ -1,26 +1,16 @@
-
-
 from numpy.lib import math
-from sklearn import tree
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import classification_report, confusion_matrix
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.model_selection import train_test_split
-from imblearn.under_sampling import NeighbourhoodCleaningRule
 import numpy as np
 import pandas as pd
 import seaborn as sn
 import matplotlib.pyplot as plt
-from scipy.stats import entropy,reciprocal
-from sklearn.ensemble import RandomForestClassifier
+from scipy.stats import entropy
+
 from decision_tree import decisionTreeClassification
 from random_forest import randomForestClassification
-
-
-from sklearn.metrics import plot_confusion_matrix
-from sklearn import metrics 
 from vectorization import vectorise_data
 from balance import balanceDataSet
+
 
 def read_files():
     train_set = pd.read_csv("./data/aug_train.csv")
