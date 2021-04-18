@@ -1,8 +1,20 @@
 # BigDataProject
 
 ## Authors
-[Marwan Ayadi](https://github.com/marwan-ayadi)
+[Marwan Ayadi](https://github.com/marwan-ayadi)  <br />
 [Bicher Chammaa](https://github.com/bicher123)
+
+### Installation
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the require libraries.
+```bash
+pip3 install -r requirements.txt
+```
+### Running the project
+
+```bash
+python analysis.py
+```
 
 ## Abstract
 The objective of this project is to analyze a dataset, discuss, and interpret the results. The dataset in question is called [HR Analytics: Job Change of Data Scientists](https://www.kaggle.com/arashnic/hr-analytics-job-change-of-data-scientists?select=aug_train.csv). It contains 19158 data points, with 13 categorical and numerical features that will help classify the candidates. The goal is to determine whether a candidate will join the company or not using the different features and information about each candidate.   
@@ -52,28 +64,33 @@ Before using any algorithm, we analyzed the data to know more about the dataset.
 ### Data Imbalance
 Then we analyzed the target distribution to determine the breakdown of the dataset’s target class. As we can see in figure 1, the dataset is imbalanced with 14381 “0” target (~75% of the dataset) and 4777 “1” target (~25% of the dataset). 
 
-<-- ADD BREAKDOWN BEFORE-->
+![alt text](https://github.com/Bicher123/BigDataProject/blob/master/results/count.png) <br />
+*Figure 1 Target distribution in the training dataset*
 
 
 We chose to address the dataset imbalance by applying the Synthetic Minority Oversampling Technique or SMOTE to the data. By creating new data points, we made sure that all the original data points remained through the analysis.   When generating new data points, we chose a sampling strategy of 0.9, meaning that the ratio of the minority class over the majority class is equal to 0.9. This way, we made sure that the dataset is more balanced without having to create too many new data points. As a result, the updated distribution can be seen below:
 
-<-- ADD BREAKDOWN AFTER -->
+![alt text](https://github.com/Bicher123/BigDataProject/blob/master/results/count_after.png)  <br />
+*Figure 2 Updated target distribution in the training dataset after applying SMOTE*
 
 ### Data Processing
 Since most of the columns’ values are of type string, we decided to map the string values to integers to be able to process them with the scikit-learn library. To do that, we created dictionaries for each column containing all the possible values of that column to be able to map all the values to integers using the apply method (see example in figure 3). Only the city number did not require a dictionary since we just had to remove the substring “city_” and cast the rest into integers. As for the missing data, we first tried to replace them by considering them as another option value and mapped them to a number (see else section in figure 2). Another attempt was to replace all the missing field values by the average of the column they belong to. We chose the average to ensure that the new values were not outliers. The average value assignment to the missing fields resulted in better results when comparing it with other options.
 
-<--ADD VECTORIZATION IMAGE-->
+![alt text](https://github.com/Bicher123/BigDataProject/blob/master/results/vect.PNG)  <br />
+*Figure 3 Gender vectorization*
 
 ### Feature Analysis
 To determine which feature will be used in the classification, we computed the correlation matrix between columns (see figure 4).
 
-<--ADD CORRELATION MATRIX-->
+![alt text](https://github.com/Bicher123/BigDataProject/blob/master/results/correlation.png)  <br />
+*Figure 4 Correlation matrix of the initial dataset*
 
 We decided to drop the columns that correlate higher than or equal to 0.35. When choosing between two correlated columns, we used entropy measurements to determine the best choice to keep (see figure 5).
 We calculated the entropy using the spicy.stat library. We then normalized all the entropy values by dividing the entropy result by the log base 2 of the length of unique possible outcomes of the column.
 Higher entropy means less information can be concluded from the column.  As a result, we decided to remove the enrollee_id column since it has high entropy. Also, when examining the values of that column, we can see that each row has a unique value, and it is not relevant to the classification.
 
-<--ADD ENTROPY IMAGE-->
+![alt text](https://github.com/Bicher123/BigDataProject/blob/master/results/entropy.png)  <br />
+*Figure 5 Entropy chart by feature*
 
 Columns dropped: 'enrollee_id', 'city','last_new_job','enrolled_university'
 
@@ -91,7 +108,8 @@ The random search cross-validation has a probability of selecting a value in the
 
 Here in the decision tree, we do 30 cross-validations.
 
-<--ADD HYPERPARAMETER IMAGE OR CODE-->
+![alt text](https://github.com/Bicher123/BigDataProject/blob/master/results/parameters_dt.PNG)  <br />
+*Figure 6 Possible parameters for the decision tree*
 
 |Parameter|Description|
 |---------|-----------|
@@ -104,7 +122,8 @@ Here in the decision tree, we do 30 cross-validations.
 
 For the random forest, we do 10 (less than decision tree, due to time of execution which is longer)
 
-<--ADD HYPERPARAMETER IMAGE OR CODE-->
+![alt text](https://github.com/Bicher123/BigDataProject/blob/master/results/parameters_rf.PNG)  <br />
+*Figure 7 Possible parameters for the random forest*
 
 |Parameter|Description|
 |---------|-----------|
@@ -168,9 +187,9 @@ Prediction on random target results for both algorithms:
 
 ### Decision Tree Classification
 Hyperparameters:
-<--USE CODE FEATURE-->
+```
 {'splitter': 'best', 'min_samples_split': 96, 'min_samples_leaf': 5, 'max_features': 7, 'max_depth': 12, 'criterion': 'entropy'}
-
+```
 Prediction on the training set:
 <table>
   <tr>
@@ -323,8 +342,9 @@ Prediction on the validation set:
 
 ### Random Forest Classification 
 Hyperparameters:
+```
 {'n_estimators': 30, 'min_samples_split': 24, 'min_samples_leaf': 1, 'max_features': 'auto', 'max_depth': 12, 'criterion': 'entropy'}
-
+```
 Prediction on the training set:
 
 <table>
@@ -512,9 +532,11 @@ As a result, we noticed that, in the case of the prediction on the training set,
 
 When comparing the two algorithms, we found that the Random Forest classifier always performed slightly better than the Decision Tree classifier. This can be attributed to the majority voting implemented within the random forest, in which multiple trees vote on the classification of a data point, as opposed to the decision tree which only relies on the classification of a single tree.
 
-<--ADD CONFUSION MATRIX IMAGE DT-->
+![alt text](https://github.com/Bicher123/BigDataProject/blob/master/results/better_dt3.png)  <br />
+*Figure 8 Confusion matrix for the decsion tree's best run*
 
-<--ADD CONFUSION MATRIX IMAGE RF-->
+![alt text](https://github.com/Bicher123/BigDataProject/blob/master/results/better_rand3.png)  <br />
+*Figure 9 Confusion matrix for the random forest’s best run*
 
 ## Discussion
 The results obtained from the eight different iterations above show that hyperparameter tuning reduced overfitting. This can be confirmed by the fact that the results of the prediction on the validation are closes to the results obtained on the test set after hyperparameter tuning.
